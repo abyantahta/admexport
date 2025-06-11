@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Dn extends Model
+{
+    /** @use HasFactory<\Database\Factories\DnFactory> */
+    use HasFactory;
+    protected $fillable = ['dn_no', 'part_no', 'truck_no', 'week', 'order_Date', 'dn_seq', 'periode', 'etd', 'qty_casemark', 'count_casemark', 'isMatch'];
+    public function casemarks()
+    {
+        return $this->hasMany(Casemark::class, 'dn_no');
+    }
+}

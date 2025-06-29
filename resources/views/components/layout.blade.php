@@ -24,7 +24,7 @@
     </head>
     <body>
         <x-header>DN ADM Export</x-header>
-        <div class="mx-2 pt-3 md:pt-14  md:max-w-7xl md:mx-auto">
+        <div class="mx-2 pt-3 md:py-14 mb-20 md:max-w-7xl md:mx-auto ">
             {{-- halo --}}
             {{ $slot }}
         </div>

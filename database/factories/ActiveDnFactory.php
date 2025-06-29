@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Interlock>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ActiveDn>
  */
-class InterlockFactory extends Factory
+class ActiveDnFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,6 @@ class InterlockFactory extends Factory
     public function definition(): array
     {
         return [
-            'isLocked' =>false,
             //
         ];
     }

@@ -1,6 +1,7 @@
-<header class="bg-white shadow fixed top-0 left-0 w-full">
+<header class="bg-white shadow fixed top-0 left-0 w-full z-[999]">
     <nav class="mx-auto max-w-7xl px-4 py-1 sm:px-6 md:py-3 lg:px-8">
         <div class="flex items-center justify-between">
+            
             <!-- Logo/Brand -->
             <div class="flex-shrink-0">
                 <h1 class="text-xs font-bold tracking-tight text-blue-600 md:text-xl">{{ $slot }}</h1>
@@ -12,8 +13,8 @@
                     {{-- <a href="{{ route('matching') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Matching</a>
                     <a href="{{ route('upload-dn') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Upload DN</a>
                     <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a> --}}
-                    <a href="" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Matching</a>
-                    <a href="" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Upload DN</a>
+                    <a href="{{ route('matching') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Matching</a>
+                    <a href="{{ route('dn.upload') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Upload DN</a>
                     <a href="" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
                 </div>
             </div>

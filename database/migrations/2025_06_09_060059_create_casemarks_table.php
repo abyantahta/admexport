@@ -19,10 +19,10 @@ return new class extends Migration
             $table->string('part_name');
             $table->string('box_type');
             $table->integer('qty_per_box');
-            $table->integer('qty_box');
-            $table->integer('count_box');
+            $table->integer('qty_kanban');
+            $table->integer('count_kanban');
             $table->boolean('isMatched');
-            $table->string('dn_no')->unique();
+            $table->string('dn_no');
             $table->foreign('dn_no')->references('dn_no')->on('dns')->onDelete('cascade');
         });
     }

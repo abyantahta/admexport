@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            // $table->timestamps();
+            $table->timestamps();
+            $table->string('kanban_barcode');
             $table->string('part_no_kanban');
-            $table->string('part_no_qc');
+            $table->string('part_no_label');
             $table->string('seq_no_kanban');
-            $table->string('seq_no_qc');
+            $table->string('seq_no_label');
+            $table->string('label_barcode');
             $table->enum('status', ['mismatch', 'match']);
-            $table->string('casemark_no')->unique();
+            $table->string('casemark_no');
             $table->foreign('casemark_no')->references('casemark_no')->on('casemarks')->onDelete('cascade');
         });
     }

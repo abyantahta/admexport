@@ -15,19 +15,17 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('dn_no')->unique();
-            $table->string('part_no');
+            $table->integer('cycle');
             $table->string('truck_no');
             $table->integer('week');
-            $table->date('order_Date');
-            $table->integer('dn_seq');
-            $table->date('periode');
-            $table->date('etd');
-            $table->integer('qty_casemark');
-            $table->integer('count_casemark');
+            $table->date('order_date');
+            $table->integer('periode');
+            $table->integer('etd');
+            $table->integer('qty_casemark')->default(1);
+            $table->integer('count_casemark')->default(0);
             $table->boolean('isMatch')->default(false);
         });
     }
-
     /**
      * Reverse the migrations.
      */

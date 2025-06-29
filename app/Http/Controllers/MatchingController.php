@@ -205,7 +205,7 @@ class MatchingController extends Controller
                             'casemark_no' => $activeDn['casemark_no']
                         ]);
 
-                        Interlock::query()->latest()->first()->update([
+                        Interlock::query()->create([
                             'isLocked' => true,
                             'created_at' => Carbon::now(),
                             'part_no_kanban' => $tempData['part_no_kanban'],
@@ -482,7 +482,15 @@ class MatchingController extends Controller
         if ($passkey !== "SaNkEi2011..!") {
             return redirect()->back()->with('passkey_error', 'Passkey salah!');
         }
-        Interlock::query()->latest()->first()->update(['isLocked' => false]);
+        $interlock = Interlock::query()->latest()->first();
+        $interlock->update([
+            'isLocked' => false,
+            'waiting_time' => abs(Carbon::now()->diffInSeconds($interlock->created_at)),
+            'notification_30m_sent' => false,
+            'notification_60m_sent' => false,
+            'notification_30m_sent_at' => null,
+            'notification_60m_sent_at' => null
+        ]);
         return redirect()->back();
     }
     //

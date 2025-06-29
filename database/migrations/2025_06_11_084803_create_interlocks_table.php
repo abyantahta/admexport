@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('isLocked')->default(false);
             $table->string('part_no_fg')->nullable()->default(null);
             $table->string('part_no_kanban')->nullable()->default(null);
-            
+            $table->integer('waiting_time')->nullable()->default(null);
         });
     }
 

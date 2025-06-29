@@ -23,9 +23,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
-        Interlock::factory()->create([
-            'isLocked' => false,
-        ]);
+        // Interlock::factory()->create([
+        //     'isLocked' => false,
+        // ]);
         // ActiveDn::factory([
         //     'id'=> 1
         // ]);

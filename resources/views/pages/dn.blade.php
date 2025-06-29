@@ -1,6 +1,6 @@
 <x-layout>
     <div class="w-full h-lvh">
-        @if ($interlock->isLocked)
+        @if ($interlock && $interlock->isLocked)
             <div
                 class="bg-[rgba(0,0,0,0.8)] absolute top-0 left-0 w-full h-lvh flex items-center justify-center z-[9999]">
                 <div class="w-full mx-4 flex flex-col items-center justify-center bg-white pb-4 rounded-md">

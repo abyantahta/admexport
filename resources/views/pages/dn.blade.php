@@ -87,8 +87,10 @@
                             <button type="submit" class="bg-yellow-400 rounded-md py-1 font-semibold md:px-8"><i
                                     class="fa fa-file"></i> Import DN</button>
                             <a class="bg-green-400 py-1 rounded-md font-bold md:px-8 flex gap-2 items-center justify-center"
-                                href="{{ url('export/transactions?date_filter=' . $dateFilter . '$statusFilter=' . $statusFilter) }}"><i
-                                    class="fa fa-file"></i>Export Transaction</a>
+                                id="exportBtn"
+                                href="#">
+                                <i class="fa fa-file"></i>Export Transaction
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -521,6 +523,25 @@
 
                 // Customize info text
                 $('.dataTables_info').addClass('text-sm text-gray-600');
+            });
+
+            function getExportUrl() {
+                const dateRange = $('#date-range').val();
+                let dn_no = $('#statusFilter').val();
+                let url = "{{ route('export.transactions') }}?";
+                if (dateRange) {
+                    const dates = dateRange.split(' to ');
+                    url += `start_date=${dates[0]}&end_date=${dates[1] || dates[0]}&`;
+                }
+                if (dn_no) {
+                    url += `dn_no=${dn_no}`;
+                }
+                return url;
+            }
+
+            $('#exportBtn').on('click', function(e) {
+                e.preventDefault();
+                window.location.href = getExportUrl();
             });
         </script>
     </div>

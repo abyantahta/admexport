@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
+use App\Exports\CasemarksTransactionsExport;
 
 class DnController extends Controller
 {
@@ -78,5 +79,16 @@ class DnController extends Controller
             }
             return back()->with('error', 'Error: ' . $e->getMessage());
         }
+    }
+
+    public function exportTransactions(Request $request)
+    {
+        $dn_no = $request->query('dn_no');
+        $start_date = $request->query('start_date');
+        $end_date = $request->query('end_date');
+
+        $export = new CasemarksTransactionsExport($dn_no, $start_date, $end_date);
+
+        return Excel::download($export, 'casemarks_transactions.xlsx');
     }
 }

@@ -19,10 +19,13 @@ return new class extends Migration
             $table->string('part_no_label');
             $table->string('seq_no_kanban');
             $table->string('seq_no_label');
+            $table->string('lot_no');
             $table->string('label_barcode');
             $table->enum('status', ['mismatch', 'match']);
             $table->string('casemark_no');
             $table->foreign('casemark_no')->references('casemark_no')->on('casemarks')->onDelete('cascade');
+            $table->string('dn_no');
+            $table->foreign('dn_no')->references('dn_no')->on('dns')->onDelete('cascade');
         });
     }
 

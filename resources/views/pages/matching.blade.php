@@ -30,7 +30,7 @@
                 
                 </div>
             </div>
-        @endif
+            @endif
             <h5 class="text-center  sm:text-3xl text-md font-bold mb-2 text-green-600 italic">KANBAN MATCHING</h5>
             <!-- Success message -->
             @if (session('success'))
@@ -60,6 +60,12 @@
                     {!! session('message') !!}
                 </div>
             @endif
+            @if (session('reset_error'))
+                <div
+                    class="bg-red-500  md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
+                    {!! session('reset_error') !!}
+                </div>
+            @endif
 
             @if (session('message-match'))
                 <div
@@ -69,8 +75,9 @@
             @endif
 
             @if (session('message-reset'))
-                <div class="bg-yellow-500  md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm"
-                    {!! session('message-reset') !!} </div>
+                <div class="bg-yellow-500  md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
+                    {!! session('message-reset') !!} 
+                </div>
             @endif
             <!-- Barcode Matching Form -->
             {{-- <form class="" action="" method="POST"> --}}
@@ -222,15 +229,43 @@
                     </div>
             </form>
 
-            <!-- Tombol Reset -->
-            <form action="" method="POST" style="display:inline;">
-                {{-- <form action="{{ route('matching.reset') }}" method="POST" style="display:inline;"> --}}
-                @csrf
-                <button type="submit"
-                    class="bg-yellow-500 font-bold italic py-1 px-8 rounded-lg block mx-auto mt-2 btn-sm :btn-md">Reset
-                    Session</button>
-            </form>
+            <!-- Reset Session Modal -->
+            <div id="resetModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-80 flex flex-col items-center">
+                    <h2 class="text-lg font-bold mb-2 text-red-600">Reset Session</h2>
+                    <form id="resetForm" method="POST" action="{{ route('matching.resetWithPassword') }}">
+                        @csrf
+                        <input type="password" name="reset_password" id="reset_password" class="border border-gray-400 rounded px-3 py-2 w-full mb-3" placeholder="Enter password" required autofocus>
+                        <div class="flex gap-2 justify-center">
+                            <button type="submit" class="bg-yellow-500 text-white w-1/2 py-1 rounded font-bold">Confirm</button>
+                            <button type="button" onclick="closeResetModal()" class="bg-gray-300 w-1/2 py-1 rounded">Cancel</button>
+                        </div>
+                    </form>
+                    {{-- @if(session('reset_error'))
+                        <div class="text-red-500 mt-2 text-sm">{{ session('reset_error') }}</div>
+                    @endif --}}
+                </div>
+            </div>
 
+            <!-- Reset Button triggers modal -->
+            <button type="button"
+                onclick="openResetModal()"
+                class="bg-yellow-500 font-bold italic py-1 px-8 rounded-lg block mx-auto mt-2 btn-sm :btn-md">Reset Session</button>
+
+            <script>
+                function openResetModal() {
+                    document.getElementById('resetModal').classList.remove('hidden');
+                    setTimeout(() => document.getElementById('reset_password').focus(), 100);
+                }
+                function closeResetModal() {
+                    document.getElementById('resetModal').classList.add('hidden');
+                    document.getElementById('reset_password').value = '';
+                }
+                // Optional: Close modal on ESC
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') closeResetModal();
+                });
+            </script>
 
         </div></br>
         <div class="container overflow-x-scroll">

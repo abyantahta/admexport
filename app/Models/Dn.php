@@ -14,4 +14,8 @@ class Dn extends Model
     {
         return $this->hasMany(Casemark::class, 'dn_no');
     }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class, 'dn_no');
+    }
 }

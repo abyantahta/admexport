@@ -79,7 +79,7 @@ class MatchingController extends Controller
         //CEK APAKAH SUDAH ADA ACTIVE DN (NGELOCK)
         if (isset($activeDn)) {
             $is_casemark_active = isset($activeDn->casemark_no);
-
+            
             //CEK APAKAH CASEMARK NYA SUDAH NGELOCK
             if (!$is_casemark_active) {
                 if (strlen($input) == 28 && preg_match('/^[A-Z]\d{2}-SDI-\d{5}-\d{2}##\d{8}#\d$/', $input)) {
@@ -140,16 +140,17 @@ class MatchingController extends Controller
                 } else if (strlen($input) == 63) {
                     return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai dengan casemark, SCAN ULANG !');
                     //SCAN LABEL OK 
-                } else if (strlen($input) == 20 && (preg_match('/^\d{5}-[A-Z]{2}\d{3}-\d{2}-[A-Z]{2}\d{3}$/', $input))) {
+                } else if (strlen($input) == 28 && (preg_match('/^\d{5}-[A-Z]{2}\d{3}-\d{2}-[A-Z]{2}\d{3}#[A-Z0-9]{7}$/', $input))) {
                     $tempData = Session::get('temp_data');
                     if (!$tempData) {
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak ditemukan dalam database');
                     }
                     $label_part_no = substr($input, 0, 17);
-                    $label_seq = substr($input, -3);
+                    $label_seq = substr($input, 17, 3);
+                    $lot_no = substr($input, 21, 7);
                     session()->put('part_no_label', $label_part_no);
                     session()->put('seq_label', $label_seq);
-
+                    // dd($label_part_no,$label_seq,$lot_no);
                     if ($label_part_no == $tempData['part_no_kanban']) {
 
                         $casemark = Casemark::query()->where('casemark_no', $activeDn->casemark_no)->first();
@@ -165,9 +166,11 @@ class MatchingController extends Controller
                             'seq_no_kanban' => $tempData['kanban_seq'],
                             'part_no_label' => $label_part_no,
                             'seq_no_label' => $label_seq,
+                            'lot_no' => $lot_no,
                             'label_barcode' => $label_part_no . $label_seq,
                             'status' => 'match',
-                            'casemark_no' => $activeDn['casemark_no']
+                            'casemark_no' => $activeDn['casemark_no'],
+                            'dn_no' => $activeDn['dn_no']
                         ]);
                         session()->flush();
 
@@ -200,9 +203,11 @@ class MatchingController extends Controller
                             'seq_no_kanban' => $tempData['kanban_seq'],
                             'part_no_label' => $label_part_no,
                             'seq_no_label' => $label_seq,
+                            'lot_no' => $lot_no,
                             'label_barcode' => $label_part_no . $label_seq,
                             'status' => 'mismatch',
-                            'casemark_no' => $activeDn['casemark_no']
+                            'casemark_no' => $activeDn['casemark_no'],
+                            'dn_no' => $activeDn['dn_no']
                         ]);
 
                         Interlock::query()->create([
@@ -493,5 +498,34 @@ class MatchingController extends Controller
         ]);
         return redirect()->back();
     }
-    //
+
+    public function resetSession()
+    {
+        // Hapus data no_dn dan no_job dari session
+        session()->flush();
+        $activeDn = ActiveDn::query()->latest()->first();
+        $activeDn->update([
+            'casemark_no' => null,
+            'dn_no' => null,
+        ]);
+
+        // Redirect kembali ke halaman input dengan pesan
+        return redirect()->back()->with('message-reset', 'Session has been reset.');
+    }
+
+    public function resetSessionWithPassword(Request $request)
+    {
+        $password = $request->input('reset_password');
+        if ($password !== 'SaNkEi2011..!') {
+            return redirect()->back()->with('reset_error', 'Password salah!');
+        }
+        // Hapus data no_dn dan no_job dari session
+        session()->flush();
+        $activeDn = ActiveDn::query()->latest()->first();
+        if ($activeDn) {
+            $activeDn->delete();
+        }
+        // Redirect kembali ke halaman input dengan pesan
+        return redirect()->back()->with('message-reset', 'Session has been reset.');
+    }
 }

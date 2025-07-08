@@ -22,12 +22,18 @@
             </style> --}}
         @endif
     </head>
-    <body>
+    <body class="">
         <x-header>DN ADM Export</x-header>
-        <div class="mx-2 pt-3 md:py-14 mb-20 md:max-w-7xl md:mx-auto ">
-            {{-- halo --}}
-            {{ $slot }}
+        <div class="w-full relative bg-[#FEFFF3]">  
+            <div class="mx-2 pt-3 md:py-14 mb-20 md:max-w-7xl md:mx-auto">
+                {{-- halo --}}
+                {{ $slot }}
+            </div>
         </div>
+        {{-- <img src="" alt=""> --}}
+        {{-- <img src="" alt=""> --}}
+        {{-- <img src="{{ asset('assets/top-left.png') }}" alt="logo" class="w-72 absolute top-8 left-0" /> --}}
+        <img src="{{ asset('assets/bottom-left.png') }}" alt="logo" class="md:w-80 sm:w-48 w-0 fixed bottom-0 left-0 " />
         {{-- <h1 class="bg-blue-500">halo</h1> --}}
         {{-- <div class="">{{ $slot }}</div> --}}
     </body>

@@ -84,9 +84,9 @@
                             {{-- </form> --}}
                         </div>
                         <div class="flex flex-col gap-2 md:flex-row w-full md:mt-4">
-                            <button type="submit" class="bg-yellow-400 rounded-md py-1 font-semibold md:px-8"><i
+                            <button type="submit" class="bg-yellow-500 rounded-md py-1 font-semibold md:px-8"><i
                                     class="fa fa-file"></i> Import DN</button>
-                            <a class="bg-green-400 py-1 rounded-md font-bold md:px-8 flex gap-2 items-center justify-center"
+                            <a class="bg-green-700 text-white py-1 rounded-md font-bold md:px-8 flex gap-2 items-center justify-center"
                                 id="exportBtn"
                                 href="#">
                                 <i class="fa fa-file"></i>Export Transaction
@@ -102,7 +102,7 @@
                     <label class="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" id="tableToggle" class="sr-only peer">
                         <div
-                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                            class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
                         </div>
                     </label>
                     <span class="text-sm font-medium text-gray-700">Casemark</span>
@@ -145,7 +145,7 @@
                     <div id="dnTableContainer">
                         <table id="dnTable"
                             class="mt-3 w-full text-center text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                            <thead class=" text-xs text-black uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                            <thead class=" text-xs text-black uppercase bg-blue-600  dark:text-gray-400">
                                 <tr class="">
                                     <th scope="col" class="px-6 py-4 text-white">No</th>
                                     <th scope="col" class="px-6 py-4 text-white">Status</th>
@@ -169,7 +169,7 @@
                         <table id="casemarkTable"
                             class="mt-3 w-full text-center text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             <thead
-                                class=" text-xs text-black uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
+                                class=" text-xs text-black uppercase bg-blue-600 dark:text-gray-400">
                                 <tr class="">
                                     <th scope="col" class="px-6 py-4 text-white">No</th>
                                     <th scope="col" class="px-6 py-4 text-white">Status</th>

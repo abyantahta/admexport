@@ -104,7 +104,7 @@
                             <div class="flex flex-col">
                                 <label for="dn_no" class="md:text-lg text-xs font-semibold mb-2">DN</label>
                                 <input type="text"
-                                    class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                    class="border-2 border-black rounded-md h-6 pl-1 md:pl-4 text-sm md:h-8 text-xs md:text-base w-full"
                                     id="dn_no" name="dn_no" value="{{ $activeDn['dn_no'] }}" disabled>
                                 {{-- <h2 class="">halo semuanya</h2> --}}
                             </div>
@@ -115,7 +115,7 @@
                                     <label for="qty_casemark"
                                         class="md:text-lg text-xs font-semibold mb-2">Casemark</label>
                                     <input type="text"
-                                        class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                        class="border-2 border-black rounded-md h-6 text-center text-sm md:h-8 text-xs md:text-base w-full"
                                         id="qty_casemark" name="qty_casemark" value="{{ $activeDn['qty_casemark'] }}"
                                         disabled>
                                     {{-- <h2 class="">halo semuanya</h2> --}}
@@ -126,7 +126,7 @@
                                     <label for="count_casemark"
                                         class="md:text-lg text-xs font-semibold mb-2">Count</label>
                                     <input type="text"
-                                        class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                        class="border-2 border-black rounded-md h-6 text-center text-sm md:h-8 text-center text-xs md:text-base w-full"
                                         id="count_casemark" name="count_casemark"
                                         value="{{ $activeDn['count_casemark'] }}" disabled>
                                     {{-- <h2 class="">halo semuanya</h2> --}}
@@ -140,7 +140,7 @@
                                 <label for="active_casemark" class="md:text-lg text-xs font-semibold mb-2">Casemark
                                     No</label>
                                 <input type="text"
-                                    class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                    class="border-2 border-black rounded-md h-6 pl-1 md:pl-4 text-sm md:h-8 text-xs md:text-base w-full"
                                     id="active_casemark" name="active_casemark"
                                     value="{{ $activeCasemark['casemark_no'] }}" disabled>
                                 {{-- <h2 class="">halo semuanya</h2> --}}
@@ -151,7 +151,7 @@
                                 <div class="flex flex-col">
                                     <label for="qty_kanban" class="md:text-lg text-xs font-semibold mb-2">Kanban</label>
                                     <input type="text"
-                                        class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                        class="border-2 border-black rounded-md h-6 text-sm md:h-8 text-center text-xs md:text-base w-full"
                                         id="qty_kanban" name="qty_kanban" value="{{ $activeCasemark['qty_kanban'] }}"
                                         disabled>
                                     {{-- <h2 class="">halo semuanya</h2> --}}
@@ -162,7 +162,7 @@
                                     <label for="count_kanban"
                                         class="md:text-lg text-xs font-semibold mb-2">Count</label>
                                     <input type="text"
-                                        class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                        class="border-2 border-black rounded-md h-6 text-sm md:h-8 text-center text-xs md:text-base w-full"
                                         id="count_kanban" name="count_kanban"
                                         value="{{ $activeCasemark['count_kanban'] }}" disabled>
                                     {{-- <h2 class="">halo semuanya</h2> --}}
@@ -176,7 +176,7 @@
                                 <label for="part_no_kanban" class="md:text-lg text-xs font-semibold mb-2">Part No
                                     Kanban</label>
                                 <input type="text"
-                                    class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                    class="border-2 border-black rounded-md h-6 pl-1 md:pl-4 text-sm md:h-8 text-xs md:text-base w-full"
                                     id="part_no_kanban" name="part_no_kanban" value="{{ session('part_no_kanban') }}"
                                     disabled>
                                 {{-- <h2 class="">halo semuanya</h2> --}}
@@ -187,7 +187,7 @@
                                 <label for="part_no_label" class="md:text-lg text-xs font-semibold mb-2">Part No
                                     QC</label>
                                 <input type="text"
-                                    class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                    class="border-2 border-black rounded-md h-6 pl-1 md:pl-4 text-sm md:h-8 text-xs md:text-base w-full"
                                     id="part_no_label" name="part_no_label" value="{{ session('part_no_label') }}"
                                     disabled>
                                 {{-- <h2 class="">halo semuanya</h2> --}}
@@ -200,7 +200,7 @@
                                 <label for="seq_kanban" class="md:text-lg text-xs font-semibold mb-2">Seq No
                                     Kanban</label>
                                 <input type="text"
-                                    class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                    class="border-2 border-black rounded-md h-6 pl-1 md:pl-4 text-sm md:h-8 text-xs md:text-base w-full"
                                     id="seq_kanban" name="seq_kanban" value="{{ session('seq_kanban') }}" disabled>
                                 {{-- <h2 class="">halo semuanya</h2> --}}
                             </div>
@@ -210,7 +210,7 @@
                                 <label for="seq_label" class="md:text-lg text-xs font-semibold mb-2">Seq No
                                     QC</label>
                                 <input type="text"
-                                    class="border-2 border-black rounded-md h-6 pl-4 text-sm md:h-8 md:text-base w-full"
+                                    class="border-2 border-black rounded-md h-6 pl-1 md:pl-4 text-sm md:h-8 text-xs md:text-base w-full"
                                     id="seq_label" name="seq_label" value="{{ session('seq_label') }}" disabled>
                                 {{-- <h2 class="">halo semuanya</h2> --}}
                             </div>
@@ -223,9 +223,15 @@
 
                     {{-- </div> --}}
 
-                    <div class="mt-3">
+                    <div class="mt-6 flex-col sm:flex-row flex gap-x-4  gap-y-2 mx-auto w-full sm:w-fit">
+                        {{-- <button class="w-full h-3 bg-green-200">sdas</button> --}}
                         <button type="submit"
-                            class="block mx-auto bg-green-700  py-1 px-8 font-bold italic  rounded-lg text-white btn-sm :btn-md">Submit</button>
+                            class="block mx-auto bg-green-700 text-sm sm:text-lg py-1 w-full sm:w-44 font-bold italic  rounded-lg text-white btn-sm :btn-md">Submit
+                        </button>
+                        <button type="button"
+                            onclick="openResetModal()"
+                            class="bg-yellow-500 font-bold text-sm sm:text-lg italic py-1 w-full sm:w-44 rounded-lg block mx-auto btn-sm :btn-md">Reset Session
+                        </button>
                     </div>
             </form>
 
@@ -248,9 +254,6 @@
             </div>
 
             <!-- Reset Button triggers modal -->
-            <button type="button"
-                onclick="openResetModal()"
-                class="bg-yellow-500 font-bold italic py-1 px-8 rounded-lg block mx-auto mt-2 btn-sm :btn-md">Reset Session</button>
 
             <script>
                 function openResetModal() {
@@ -272,19 +275,19 @@
             <!-- Transaction Summary Table -->
             {{-- <h5>Transaction Summary</h5> --}}
             <table id="transactionsTable"
-                class="mt-3 w-full text-center text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                <thead class=" text-xs text-black uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
-                    <th scope="col" class="px-6 py-4 text-white">No</th>
-                    <th scope="col" class="px-6 py-4 text-white">Status</th>
-                    <th scope="col" class="px-6 py-4 text-white">Casemark</th>
-                    <th scope="col" class="px-6 py-4 text-white">Sequence Kanban</th>
-                    <th scope="col" class="px-6 py-4 text-white">Label QC</th>
-                    <th scope="col" class="px-6 py-4 text-white">Seq No QC</th>
-                    <th scope="col" class="px-6 py-4 text-white">Created At</th>
+                class="mt-3 h-2 w-full text-center text-xs text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                <thead class=" text-xs text-black uppercase bg-green-700 dark:text-gray-400">
+                    <th scope="col" class="px-6 py-4 text-white text-xs">No</th>
+                    <th scope="col" class="px-6 py-4 text-white text-xs">Status</th>
+                    <th scope="col" class="px-6 py-4 text-white text-xs">Casemark</th>
+                    <th scope="col" class="px-6 py-4 text-white text-xs">Sequence Kanban</th>
+                    <th scope="col" class="px-6 py-4 text-white text-xs">Label QC</th>
+                    <th scope="col" class="px-6 py-4 text-white text-xs">Seq No QC</th>
+                    <th scope="col" class="px-6 py-4 text-white text-xs">Created At</th>
                     </tr>
 
                 </thead>
-                <tbody class="text-gray-800 font-semibold -pt-3">
+                <tbody class="text-gray-800 font-semibold -pt-3 text-xs md:text-base">
                 </tbody>
             </table>
         </div>
@@ -308,7 +311,7 @@
                     scrollX: true,
                     autoWidth: false,
                     pageLength: 10,
-                    dom: '<"flex flex-col-reverse gap-y-2 md:flex-row md:justify-between items-center mb-4"<"flex items-center"l><"flex items-center"f>>rt<"flex justify-between items-center mt-4"<"flex items-center"i><"flex items-center"p>>',
+                    dom: '<"flex text-xs md:text-base flex-col-reverse gap-y-2 md:flex-row md:justify-between items-center mb-4"<"flex items-center"l><"flex items-center"f>>rt<"flex justify-between items-center mt-4"<"flex items-center"i><"flex items-center"p>>',
                     lengthMenu: [
                         [10, 25, 50, -1],
                         [10, 25, 50, "All"]
@@ -381,116 +384,6 @@
                     }
                 });
 
-                // $('#dnTable').DataTable({
-                //     processing: true,
-                //     serverSide: true,
-                //     scrollX: true,
-                //     autoWidth: false,
-                //     pageLength: 10,
-                //     dom: '<"flex flex-col-reverse gap-y-2 md:flex-row md:justify-between items-center mb-4"<"flex items-center"l><"flex items-center"f>>rt<"flex justify-between items-center mt-4"<"flex items-center"i><"flex items-center"p>>',
-                //     lengthMenu: [
-                //         [10, 25, 50, -1],
-                //         [10, 25, 50, "All"]
-                //     ],
-                //     ajax: {
-                //         url: "{{ route('dn.data') }}",
-                //         type: 'GET',
-                //         data: function(d) {
-                //             const dateRange = $('#date-range').val();
-                //             if (dateRange) {
-                //                 const dates = dateRange.split(' to ');
-                //                 d.start_date = dates[0];
-                //                 d.end_date = dates[1] || dates[0];
-                //             }
-                //             d.dn_no = $('#statusFilter').val();
-                //         }
-                //     },
-                //     columns: [{
-                //             data: 'id',
-                //             name: 'id',
-                //             width: '5%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'dn_no',
-                //             name: 'dn_no',
-                //             width: '25%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'cycle',
-                //             name: 'cycle',
-                //             width: '25%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'truck_no',
-                //             name: 'truck_no',
-                //             width: '10%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'week',
-                //             name: 'week',
-                //             width: '5%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'order_date',
-                //             name: 'order_date',
-                //             width: '10%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'periode',
-                //             name: 'periode',
-                //             width: '10%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'etd',
-                //             name: 'etd',
-                //             width: '10%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'qty_casemark',
-                //             name: 'qty_casemark',
-                //             width: '10%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'count_casemark',
-                //             name: 'count_casemark',
-                //             width: '10%',
-                //             className: 'px-6 py-3'
-                //         },
-                //         {
-                //             data: 'isMatch',
-                //             name: 'isMatch',
-                //             width: '10%',
-                //             className: 'px-6 py-3'
-                //         },
-                //     ],
-                //     language: {
-                //         emptyTable: "No data available",
-                //         zeroRecords: "No matching records found",
-                //         lengthMenu: "Show _MENU_ entries",
-                //         search: "",
-                //         searchPlaceholder: "Search DN..."
-                //     },
-                //     createdRow: function(row, data, dataIndex) {
-                //         $(row).addClass('hover:bg-gray-50');
-                //     },
-                //     drawCallback: function() {
-                //         $('.paginate_button').addClass(
-                //             'cursor-pointer px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition-colors duration-200'
-                //         );
-                //         $('.paginate_button.current').addClass('bg-blue-500 text-white hover:bg-blue-600');
-                //         $('.paginate_button.disabled').addClass('opacity-50 cursor-not-allowed');
-                //     }
-                // });
-
                 // Barcode input handling
                 const barcodeInput = document.getElementById('barcode');
 
@@ -515,7 +408,7 @@
                 // $('.dataTables_filter').addClass('w-lvw md:w-fit px-8 md:px-0 mx-auto');
 
                 // Customize pagination buttons
-                $('.dataTables_paginate').addClass('flex gap-4 items-center');
+                $('.dataTables_paginate').addClass('flex text-xs sm:text-base gap-4 items-center');
                 $('.dataTables_paginate .paginate_button').addClass(
                     'px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition-colors duration-200'
                 );
@@ -523,7 +416,7 @@
                 $('.dataTables_paginate .paginate_button.disabled').addClass('opacity-50 cursor-not-allowed');
 
                 // Customize info text
-                $('.dataTables_info').addClass('text-sm text-gray-600');
+                $('.dataTables_info').addClass('hidden sm:block text-gray-600');
             });
         </script>
         {{-- @endpush --}}

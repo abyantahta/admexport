@@ -15,7 +15,7 @@
                     <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a> --}}
                     <a href="{{ route('matching') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Matching</a>
                     <a href="{{ route('dn.upload') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Upload DN</a>
-                    <a href="" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+                    {{-- <a href="" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a> --}}
                 </div>
             </div>
 
@@ -38,12 +38,13 @@
         <!-- Mobile menu -->
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Matching</a>
-                <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Upload DN</a>
-                <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Dashboard</a>
+                <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Matching</a>
+                <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Upload DN</a>
+                {{-- <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Dashboard</a> --}}
             </div>
         </div>
     </nav>
+    <img src="{{ asset('assets/top-right.png') }}" alt="logo" class="w-20 fixed top-0 right-0 z-[-999]" />
 </header>
 
 <script>

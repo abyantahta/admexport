@@ -26,12 +26,12 @@ class MatchingController extends Controller
         $activeDn = [
             'dn_no' => "",
             'qty_casemark' => "",
-            'count_casemark' => 0
+            'count_casemark' => ""
         ];
         $activeCasemark = [
             'casemark_no' => "",
             'qty_kanban' => "",
-            'count_kanban' => 0
+            'count_kanban' => ""
         ];
         if (isset($tempActiveDn->dn_no)) {
             $dn = Dn::query()->where('dn_no', $tempActiveDn->dn_no)->first();

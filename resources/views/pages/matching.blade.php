@@ -273,7 +273,7 @@
             {{-- <h5>Transaction Summary</h5> --}}
             <table id="transactionsTable"
                 class="mt-3 w-full text-center text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                <thead class=" text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <thead class=" text-xs text-black uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
                     <th scope="col" class="px-6 py-4 text-white">No</th>
                     <th scope="col" class="px-6 py-4 text-white">Status</th>
                     <th scope="col" class="px-6 py-4 text-white">Casemark</th>

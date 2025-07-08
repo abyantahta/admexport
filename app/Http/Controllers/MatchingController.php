@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActiveDN;
-use App\Models\ActiveDn as ModelsActiveDn;
+use App\Models\ActiveDn;
 use App\Models\Casemark;
 use App\Models\Dn;
 use App\Models\Interlock;
@@ -23,7 +22,7 @@ class MatchingController extends Controller
         $interlock = Interlock::latest()->first();
 
         $transactions = Transaction::all();
-        $tempActiveDn = ActiveDN::query()->first();
+        $tempActiveDn = ActiveDn::query()->first();
         $activeDn = [
             'dn_no' => "",
             'qty_casemark' => "",
@@ -72,7 +71,7 @@ class MatchingController extends Controller
         $input = trim($request->input('barcode')); // trim untuk menghilangkan whitespaces
         // dd($input);
 
-        $activeDn = (ActiveDN::query()->first());
+        $activeDn = (ActiveDn::query()->first());
         // $is_dn_active = false;
         $is_casemark_active = false;
 
@@ -239,9 +238,6 @@ class MatchingController extends Controller
                     return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai format, SCAN ULANG !');
                 }
             }
-
-
-
             // if($is)
         } else {
             if ((str_starts_with($input, 'DN') || str_starts_with($input, 'SO')) && strlen($input) == 16) {

@@ -145,7 +145,7 @@
                     <div id="dnTableContainer">
                         <table id="dnTable"
                             class="mt-3 w-full text-center text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                            <thead class=" text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <thead class=" text-xs text-black uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
                                 <tr class="">
                                     <th scope="col" class="px-6 py-4 text-white">No</th>
                                     <th scope="col" class="px-6 py-4 text-white">Status</th>
@@ -169,7 +169,7 @@
                         <table id="casemarkTable"
                             class="mt-3 w-full text-center text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
                             <thead
-                                class=" text-xs text-black uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                class=" text-xs text-black uppercase bg-gray-700 dark:bg-gray-700 dark:text-gray-400">
                                 <tr class="">
                                     <th scope="col" class="px-6 py-4 text-white">No</th>
                                     <th scope="col" class="px-6 py-4 text-white">Status</th>

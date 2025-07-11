@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Casemark;
+use App\Models\Dn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Yajra\DataTables\Facades\DataTables;
@@ -14,7 +15,9 @@ class CasemarkController extends Controller
         $query = Casemark::query();
         
         if($request->start_date && $request->end_date){
-            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
+            $dnNos = Dn::whereBetween('order_date', [$request->start_date, $request->end_date])
+                ->pluck('dn_no');
+            $query->whereIn('dn_no', $dnNos);
         }
 
         // Only apply DN filter if a DN is actually selected

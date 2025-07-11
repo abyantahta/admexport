@@ -2,11 +2,13 @@
 
 namespace App\Exports;
 
+use App\Models\Dn;
 use App\Models\Transaction;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class TransactionsSheetExport implements FromCollection, WithHeadings
+class TransactionsSheetExport implements FromView, WithHeadings
 {
     protected $dn_no, $start_date, $end_date;
 
@@ -17,23 +19,37 @@ class TransactionsSheetExport implements FromCollection, WithHeadings
         $this->end_date = $end_date;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function view(): \Illuminate\Contracts\View\View
     {
         $query = Transaction::query();
-        if ($this->dn_no) $query->where('dn_no', $this->dn_no);
         if ($this->start_date && $this->end_date) {
-            $query->whereBetween('created_at', [$this->start_date, $this->end_date]);
+            $dnNos = Dn::whereBetween('order_date', [$this->start_date, $this->end_date])
+            ->pluck('dn_no');
+            $query->whereIn('dn_no', $dnNos);
         }
-        return $query->get();
+        if ($this->dn_no) $query->where('dn_no', $this->dn_no);
+
+        $transactions = $query->get();
+        // dd($transactions);
+        return view('pages.export_transactions', [
+            'transactions' => $transactions
+        ]);
     }
 
     public function headings(): array
     {
         return [
-            'ID', 'Status', 'DN Number', 'Count Casemark', 'Qty Casemark', 'Cycle', 'Truck No', 'Week', 'Order Date', 'Periode', 'ETD'
+            'No',
+            'Status',
+            'DN Number',
+            'Count Casemark',
+            'Qty Casemark',
+            'Cycle',
+            'Truck No',
+            'Week',
+            'Order Date',
+            'Periode',
+            'ETD'
         ];
     }
 }

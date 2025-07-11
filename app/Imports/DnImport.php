@@ -26,7 +26,8 @@ class DnImport implements ToModel, WithStartRow
             $isExist->qty_casemark = $isExist->qty_casemark + 1;
             $isExist->save();
         }else{
-            $order_date = Carbon::createFromFormat('Y-m-d', '1900-01-01')->addDays($row[6]);
+            $order_date = Carbon::createFromFormat('Y-m-d', '1900-01-01')->addDays(((int)$row[6] - 2));
+            // dd($order_date);
             Dn::create([
                 'dn_no'=>$row[8],
                 'truck_no'=>$row[18],

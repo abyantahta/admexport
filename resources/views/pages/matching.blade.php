@@ -35,7 +35,7 @@
             <!-- Success message -->
             @if (session('success'))
                 <div
-                    class="bg-yellow-500 text md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
+                    class="bg-yellow-500 text-xs md:text-base mb-2 md:mb-0 text md:px-16 mb-2 md:mb-0 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
                     {!! session('success') !!}
                 </div>
             @endif
@@ -43,11 +43,11 @@
             {{-- <div class="bg-red-400 inline-block mx-auto px-6 py-1">{!! $errors->first() !!}DBSIDSOAUHDSA</div> --}}
 
             @if ($errors->any())
-                <div class="bg-red-500  md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm"
+                <div class="bg-red-500 md:px-16 text-xs mb-2 md:mb-0 md:text-base flex flex-col md:flex-row items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm"
                     role="alert">
                     {{-- <x-radix-cross-circled class="w-6" /> --}}
                     {{-- <x-zondicon-close-outline /> --}}
-                    <x-codicon-error class="w-8" />
+                    <x-codicon-error class="w-8 hidden md:block" />
                     {{-- {{ $value }} --}}
                     {!! $errors->first() !!}
                     {{-- Whoops! There are some problems --}}
@@ -56,7 +56,7 @@
 
             @if (session('message'))
                 <div
-                    class="bg-yellow-500  md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
+                    class="bg-yellow-500 mb-2 md:mb-0 text-xs md:text-base md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
                     {!! session('message') !!}
                 </div>
             @endif
@@ -69,13 +69,13 @@
 
             @if (session('message-match'))
                 <div
-                    class="bg-green-500  md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
+                    class="bg-green-500 mb-2 md:mb-0 text-xs md:text-base md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
                     {!! session('message-match') !!}
                 </div>
             @endif
 
             @if (session('message-reset'))
-                <div class="bg-yellow-500  md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
+                <div class="bg-yellow-500 mb-2 md:mb-0 text-xs md:text-base md:px-16 flex items-center justify-center gap-1 text-center inline-block py-2 px-8 rounded-md font-bold text-white text-sm">
                     {!! session('message-reset') !!} 
                 </div>
             @endif

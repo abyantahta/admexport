@@ -87,8 +87,7 @@
                             <button type="submit" class="bg-yellow-500 rounded-md py-1 font-semibold md:px-8"><i
                                     class="fa fa-file"></i> Import DN</button>
                             <a class="bg-green-700 text-white py-1 rounded-md font-bold md:px-8 flex gap-2 items-center justify-center"
-                                id="exportBtn"
-                                href="#">
+                                id="exportBtn" href="#">
                                 <i class="fa fa-file"></i>Export Transaction
                             </a>
                         </div>
@@ -168,8 +167,7 @@
                     <div id="casemarkTableContainer" style="display: none;">
                         <table id="casemarkTable"
                             class="mt-3 w-full text-center text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                            <thead
-                                class=" text-xs text-black uppercase bg-blue-600 dark:text-gray-400">
+                            <thead class=" text-xs text-black uppercase bg-blue-600 dark:text-gray-400">
                                 <tr class="">
                                     <th scope="col" class="px-6 py-4 text-white">No</th>
                                     <th scope="col" class="px-6 py-4 text-white">Status</th>
@@ -284,10 +282,13 @@
                         }
                     },
                     columns: [{
-                        data: 'id',
-                            name: 'id',
+                            data: null,
                             width: '5%',
-                            className: 'px-6 py-3'
+                            className: 'px-6 py-3',
+                            orderable: false,
+                            render: function(data, type, row, meta) {
+                                return meta.row + 1 + meta.settings._iDisplayStart;
+                            }
                         },
                         {
                             data: 'isMatch',
@@ -395,22 +396,24 @@
                             d.dn_no = selectedDn === '' ? null : selectedDn;
                         }
                     },
-                    columns: [
-                        {
-                            data: 'id',
-                            name: 'id',
+                    columns: [{
+                            data: null,
                             width: '5%',
-                            className: 'px-6 py-3'
+                            className: 'px-6 py-3',
+                            orderable: false,
+                            render: function(data, type, row, meta) {
+                                return meta.row + 1 + meta.settings._iDisplayStart;
+                            }
                         },
                         // {
                         //     "data": '',
                         //     "render": function(data, type, row, meta) {
-                            //         return meta.row + 1; // This will number the rows starting from 1
-                            //     },
+                        //         return meta.row + 1; // This will number the rows starting from 1
+                        //     },
                         //     width: '5%',
                         //     className: 'px-6 py-3'
                         // },
-                        
+
                         {
                             data: 'isMatched',
                             name: 'isMatched',
@@ -479,7 +482,7 @@
                     drawCallback: function() {
                         $('.paginate_button').addClass(
                             'cursor-pointer px-3 py-1 bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition-colors duration-200'
-                            );
+                        );
                         $('.paginate_button.current').addClass('bg-blue-500 text-white hover:bg-blue-600');
                         $('.paginate_button.disabled').addClass('opacity-50 cursor-not-allowed');
                     }
@@ -517,7 +520,7 @@
                 $('.dataTables_paginate').addClass('flex gap-4 items-center');
                 $('.dataTables_paginate .paginate_button').addClass(
                     'px-4 py-2 bg-white border border-gray-300 rounded-md hover:bg-gray-100 transition-colors duration-200'
-                    );
+                );
                 $('.dataTables_paginate .paginate_button.current').addClass('bg-blue-500 text-white hover:bg-blue-600');
                 $('.dataTables_paginate .paginate_button.disabled').addClass('opacity-50 cursor-not-allowed');
 

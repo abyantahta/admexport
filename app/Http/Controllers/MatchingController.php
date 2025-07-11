@@ -137,7 +137,7 @@ class MatchingController extends Controller
                     return redirect()->back()->with('message-match', 'SILAHKAN SCAN LABEL OK QC');
                     //KANBAN SESUAI FORMAT TAPI TIDAK SESUAI DENGAN CASEMARK YANG DISCAN SEBELUMNYA
                 } else if (strlen($input) == 63) {
-                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai dengan casemark, SCAN ULANG !');
+                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span> ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai dengan casemark, SCAN ULANG !');
                     //SCAN LABEL OK 
                 } else if (strlen($input) == 28 && (preg_match('/^\d{5}-[A-Z]{2}\d{3}-\d{2}-[A-Z]{2}\d{3}#[A-Z0-9]{7}$/', $input))) {
                     $tempData = Session::get('temp_data');

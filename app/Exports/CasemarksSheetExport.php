@@ -3,10 +3,11 @@
 namespace App\Exports;
 
 use App\Models\Casemark;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use App\Models\Dn;
+use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class CasemarksSheetExport implements FromCollection, WithHeadings
+class CasemarksSheetExport implements FromView, WithHeadings
 {
     protected $dn_no, $start_date, $end_date;
 
@@ -17,23 +18,26 @@ class CasemarksSheetExport implements FromCollection, WithHeadings
         $this->end_date = $end_date;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
+    public function view(): \Illuminate\Contracts\View\View
     {
         $query = Casemark::query();
-        if ($this->dn_no) $query->where('dn_no', $this->dn_no);
         if ($this->start_date && $this->end_date) {
-            $query->whereBetween('created_at', [$this->start_date, $this->end_date]);
+            $dnNos = Dn::whereBetween('order_date', [$this->start_date, $this->end_date])
+            ->pluck('dn_no');
+            $query->whereIn('dn_no', $dnNos);        
         }
-        return $query->get();
+        
+        if ($this->dn_no) $query->where('dn_no', $this->dn_no);
+        $casemarks = $query->get();
+        return view('pages.export_casemarks', [
+            'casemarks' => $casemarks
+        ]);
     }
 
     public function headings(): array
     {
         return [
-            'ID', 'Status', 'Casemark No', 'Count Kanban', 'Qty Kanban', 'Part No', 'Part Name', 'Box Type', 'Qty Per Box', 'DN No'
+            'No', 'Status', 'Casemark No', 'Count Kanban', 'Qty Kanban', 'Part No', 'Part Name', 'Box Type', 'Qty Per Box', 'DN No'
         ];
     }
 }

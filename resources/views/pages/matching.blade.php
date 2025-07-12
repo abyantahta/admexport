@@ -5,7 +5,7 @@
     <div class="w-full h-lvh">
         <div class=" mt-6 md:pt-4">
             @if ($interlock && $interlock->isLocked)
-            <div class="bg-[rgba(0,0,0,0.8)] absolute top-0 left-0 w-full h-lvh flex items-center justify-center z-[9999]">
+            <div class="bg-[rgba(0,0,0,0.8)] fixed top-0 left-0 w-full h-lvh flex items-center justify-center z-[9999]">
                 <div class="w-full mx-0 scale-75 sm:scale-100 sm:w-96 rounded-lg overflow-hidden sm:mx-4 flex flex-col items-center justify-center bg-white pb-4">  
                     <h1 class="text-xl text-center font-bold bg-red-400 w-full h-12 flex items-center justify-center text-white mb-2">This page is Locked</h1>
                     <h2 class="text-sm">Mismatch at <b>{{ $interlock->created_at }}</b></h2>
@@ -283,6 +283,7 @@
                     <th scope="col" class="px-6 py-4 text-white text-xs">Sequence Kanban</th>
                     <th scope="col" class="px-6 py-4 text-white text-xs">Label QC</th>
                     <th scope="col" class="px-6 py-4 text-white text-xs">Seq No QC</th>
+                    <th scope="col" class="px-6 py-4 text-white text-xs">Lot No</th>
                     <th scope="col" class="px-6 py-4 text-white text-xs">Created At</th>
                     </tr>
 
@@ -351,6 +352,11 @@
                         {
                             data: 'seq_no_label',
                             name: 'seq_no_label',
+                            orderable: false
+                        },
+                        {
+                            data: 'lot_no',
+                            name: 'lot_no',
                             orderable: false
                         },
                         {

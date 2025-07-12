@@ -92,7 +92,7 @@ class MatchingController extends Controller
                         //CEK APAKAH FORMAT CASEMARK YANG DISCAN TERDAFTAR PADA DN YANG DISCAN SEBELUMNYA
                         if (!$isThisCasemarkValid) {
                             //CASEMARK TIDAK SESUAI DENGAN DN YANG DISCAN
-                            return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak sesuai dengan DN, scan Casemark yang sesuai');
+                            return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak sesuai dengan DN, scan Casemark yang sesuai');
                         }
 
                         if ($thisCasemark->isMatched) {
@@ -105,9 +105,9 @@ class MatchingController extends Controller
                         //BERHASIL
                         return redirect()->back()->with('message-match', 'SILAHKAN SCAN BARCODE KANBAN');
                     }
-                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak ditemukan dalam database');
+                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak ditemukan dalam database');
                 }
-                return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Masukkan format QR Casemark yang benar');
+                return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Masukkan format QR Casemark yang benar');
 
                 //CASEMARK TIDAK DITEMUKAN ATAU FORMATNYA SALAH
             }
@@ -137,12 +137,12 @@ class MatchingController extends Controller
                     return redirect()->back()->with('message-match', 'SILAHKAN SCAN LABEL OK QC');
                     //KANBAN SESUAI FORMAT TAPI TIDAK SESUAI DENGAN CASEMARK YANG DISCAN SEBELUMNYA
                 } else if (strlen($input) == 63) {
-                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span> ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai dengan casemark, SCAN ULANG !');
+                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span> ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai dengan casemark');
                     //SCAN LABEL OK 
                 } else if (strlen($input) == 28 && (preg_match('/^\d{5}-[A-Z]{2}\d{3}-\d{2}-[A-Z]{2}\d{3}#[A-Z0-9]{7}$/', $input))) {
                     $tempData = Session::get('temp_data');
                     if (!$tempData) {
-                        return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak ditemukan dalam database');
+                        return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak ditemukan dalam database');
                     }
                     $label_part_no = substr($input, 0, 17);
                     $label_seq = substr($input, 17, 3);
@@ -151,6 +151,11 @@ class MatchingController extends Controller
                     session()->put('seq_label', $label_seq);
                     // dd($label_part_no,$label_seq,$lot_no);
                     if ($label_part_no == $tempData['part_no_kanban']) {
+
+                        $isLabelDuplicate = Transaction::query()->where('seq_no_label',$label_seq)->where('lot_no',$lot_no)->exists();
+                        if($isLabelDuplicate){
+                            return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Label dengan Sequence : '.$label_seq." dan Lot : ".$lot_no." sudah pernah discan!");
+                        }
 
                         $casemark = Casemark::query()->where('casemark_no', $activeDn->casemark_no)->first();
                         $dn = Dn::query()->where('dn_no', $activeDn->dn_no)->first();
@@ -226,6 +231,8 @@ class MatchingController extends Controller
                             ]);
                         } catch (\Exception $e) {
                         }
+                        session()->forget('part_no_label');
+                        session()->forget('seq_label');
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>MISMATCH</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai!');
                     }
 

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Cache;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\DataTables\Facades\DataTables;
 use App\Exports\CasemarksTransactionsExport;
+use Carbon\Carbon;
 
 class DnController extends Controller
 {
@@ -87,8 +88,19 @@ class DnController extends Controller
         $start_date = $request->query('start_date');
         $end_date = $request->query('end_date');
 
+        $fileName = "Transactions.xlsx";
+        if($dn_no){
+            $fileName = 'Transactions '.$dn_no.'.xlsx';
+        }else if($start_date){
+            if($end_date){
+                $fileName = 'Transactions ['.Carbon::parse($start_date)->format('d M Y').'-'.Carbon::parse($end_date)->format('d M Y').'].xlsx';
+            }else{
+                $fileName = 'Transactions ['.Carbon::parse($start_date)->format('d M Y').'].xlsx';
+            }
+        }
+
         $export = new CasemarksTransactionsExport($dn_no, $start_date, $end_date);
 
-        return Excel::download($export, 'casemarks_transactions.xlsx');
+        return Excel::download($export, $fileName);
     }
 }

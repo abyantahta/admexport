@@ -224,8 +224,8 @@ class MatchingController extends Controller
                             $response = Http::withHeaders([
                                 'Authorization' => 'DcjkiWJ9gwbp7scYKowe',
                             ])->withOptions(['verify' => false])->post('https://api.fonnte.com/send', [
-                                'target' => '082245792234',
-                                'message' => 'Terjadi mismatch pukul ' . Carbon::now()->format('H:i') . '
+                                'target' => '089522134460, 081270074197,082245792234',
+                                'message' => 'Terjadi mismatch pengiriman ADM Export pukul ' . Carbon::now()->format('H:i') . '
                                                 Segera datang ke line.',
                                 'delay' => '2'
                             ]);
@@ -242,7 +242,7 @@ class MatchingController extends Controller
                     if ($tempData) {
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Label tidak sesuai format, SCAN ULANG !');
                     }
-                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai format, SCAN ULANG !');
+                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>FORMAT TIDAK SESUAI</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai format, SCAN ULANG !');
                 }
             }
             // if($is)

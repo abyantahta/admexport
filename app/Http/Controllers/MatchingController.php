@@ -81,7 +81,7 @@ class MatchingController extends Controller
             
             //CEK APAKAH CASEMARK NYA SUDAH NGELOCK
             if (!$is_casemark_active) {
-                if (strlen($input) == 28 && preg_match('/^[A-Z]\d{2}-SDI-\d{5}-\d{2}##\d{8}#\d$/', $input)) {
+                if (strlen($input) == 28 && (preg_match('/^[A-Z]\d{2}-SDI-\d{5}-\d{2}##\d{8}#\d$/', $input) || preg_match('/^[A-Z]{2}\d{1}-SDI-\d{5}-\d{2}##\d{8}#\d$/', $input))) {
                     $casemark_from_input = substr($input, 0, 13);
                     // dd($casemark_from_input);
                     $thisCasemark = Casemark::where('casemark_no', $casemark_from_input)->first();

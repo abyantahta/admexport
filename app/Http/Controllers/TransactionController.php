@@ -6,6 +6,12 @@ use App\Models\Interlock;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+// use App\Models\Qcpass;
+use App\Models\History;
+// use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Spatie\Browsershot\Browsershot;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -69,6 +75,99 @@ class TransactionController extends Controller
                 ->rawColumns(['status', 'dn_status', 'created_at','plant']) // Jangan lupa tambahkan 'created_at' di sini
                 ->make(true);
                 // dd($transaction);
+        }
+    }
+
+    public function printDN(Request $request){
+        // User is already authenticated by middleware
+        $dn_no = $request->dn_no;
+        try {
+            if (empty($dn_no)) {
+                return response()->json(['message' => 'DN number missing'], 422);
+            }
+
+            // Generate PDF with Spatie Laravel PDF
+            $filename = 'DN_' . $dn_no . '_' . now()->format('Y-m-d_H-i-s') . '.pdf';
+            \Illuminate\Support\Facades\Storage::disk('public')->makeDirectory('DN');
+
+            $pdfPath = storage_path("app/public/DN/{$filename}");
+
+            // Render simple DN PDF
+            Browsershot::html(view('pages.print-dn-pdf', compact('dn_no'))->render())
+                ->timeout(60000)
+                ->paperSize(130, 85, 'mm') // 144x89mm in millimeters
+                ->margins(0, 0, 0, 0) // No margins
+                ->dismissDialogs() // Dismiss any browser dialogs
+                ->waitUntilNetworkIdle() // Wait for network to be idle
+                ->emulateMedia('print') // Emulate print media
+                ->showBackground() // Show background colors and images
+                ->savePdf($pdfPath);
+
+            $exists = file_exists($pdfPath);
+
+            return response()->json([
+                'status' => $exists ? 'saved' : 'not_saved',
+                'path' => $pdfPath,
+            ]);
+
+
+                // $apiKey = 'um2d2TZoQ9PSALFymVYmHgOqmXVWjCQ-p8exbhUv8Ss';
+                // $apiPassword = env('PRINTNODE_PASSWORD', '');
+                // $httpClient = Http::withBasicAuth($apiKey, $apiPassword)
+                //     ->timeout(60) // total request timeout
+                //     ->connectTimeout(10) // fail faster on connection issues
+                //     ->retry(3, 500); // simple retry to ride out transient hiccups
+
+                // $response = $httpClient->get('https://api.printnode.com/printers');
+
+
+                // $pdfBase64 = base64_encode(file_get_contents(storage_path("app/public/labels/label-print.pdf")));
+
+
+                // $response = $httpClient
+                //     ->post('https://api.printnode.com/printjobs', [
+                //         'printerId' => $printerId,
+                //         'title' => 'Label Print',
+                //         'contentType' => 'pdf_base64',
+                //         'content' => $pdfBase64,
+                //         'source' => 'LaravelApp',
+                //         'options' => [
+                //             'fit_to_page' => false, // Prevent scaling
+                //             // 'paper' => 'Custom.100x89mm', // Custom paper size
+                //             'scale' => 100, // 100% scale - no scaling
+                //             'auto_rotate' => false, // Prevent auto rotation
+                //             'auto_center' => false, // Prevent auto centering
+                //         ],
+                //     ]);
+
+                // if ($response->successful()) {
+                //     return $request->ajax()
+                //         ? response()->json(['status' => 'success'])
+                //         : redirect()->back()->with('print_status', 'success');
+                // }
+                // Log::error('PrintNode error response', [
+                //     'status' => $response->status(),
+                //     'body' => $response->body(),
+                // ]);
+                // return $request->ajax()
+                //     ? response()->json(['message' => 'PrintNode API Error: ' . $response->status()], 500)
+                //     : redirect()->back()->with('print_status', 'error');
+
+
+        } catch (\Exception $e) {
+            // Update history record with error status if it exists
+            if (isset($historyRecord)) {
+                $historyRecord->update([
+                    'print_status' => 'error',
+                    'error_message' => 'PDF Generation Error: ' . $e->getMessage()
+                ]);
+            }
+            
+            Log::error('PDF Generation Error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            return $request->ajax()
+                ? response()->json(['message' => 'Error generating PDF: ' . $e->getMessage()], 500)
+                : redirect()->back()->withErrors('Error generating PDF: ' . $e->getMessage());
         }
     }
     //

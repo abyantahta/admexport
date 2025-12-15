@@ -28,4 +28,5 @@ Route::post('/matching/store', [MatchingController::class, 'store'])->name('matc
 Route::post('/matching/unlock', [MatchingController::class, 'unlock'])->name('matching.unlock');
 Route::post('/matching/reset', [MatchingController::class, 'resetSession'])->name('matching.reset');
 Route::post('/matching/resetWithPassword', [MatchingController::class, 'resetSessionWithPassword'])->name('matching.resetWithPassword');
+Route::post('/transactions/print', [TransactionController::class, 'printDN'])->name('transaction.printDn');
 Route::get('export/transactions', [DnController::class, 'exportTransactions'])->name('export.transactions');

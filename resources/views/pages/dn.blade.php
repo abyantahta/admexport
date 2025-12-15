@@ -147,6 +147,7 @@
                             <thead class=" text-xs text-black uppercase bg-blue-600  dark:text-gray-400">
                                 <tr class="">
                                     <th scope="col" class="px-6 py-4 text-white">No</th>
+                                    <th scope="col" class="px-6 py-4 text-white">Print</th>
                                     <th scope="col" class="px-6 py-4 text-white">Status</th>
                                     <th scope="col" class="px-6 py-4 text-white">Dn Number</th>
                                     <th scope="col" class="px-6 py-4 text-white">Count Casemark</th>
@@ -291,9 +292,34 @@
                             }
                         },
                         {
+                            data: null,
+                            name: 'print',
+                            width: '7%',
+                            className: 'px-6 py-3 text-center',
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                console.log(row);
+                                const matched = row.count_casemark==row.qty_casemark;
+                                const btnClass = matched ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'bg-gray-300';
+                                const title = matched ? 'Matched - print label' : 'Unmatched - print label';
+                                const disabled = matched? "" : "disabled"
+                                // console.log(disabled);
+                                return `<button type="button"
+                                            class="print-label-btn ${btnClass} text-white px-3 py-1 rounded flex items-center gap-2 mx-auto"
+                                            data-dn="${row.dn_no}"
+                                            data-matched="${matched}"
+                                            title="${title}"
+                                            ${disabled}
+                                            >
+                                            Print
+                                        </button>`;
+                            }
+                        },
+                        {
                             data: 'isMatch',
                             name: 'isMatch',
-                            width: '10%',
+                            width: '5%',
                             className: 'px-6 py-3'
                         },
                         {
@@ -508,6 +534,41 @@
                     } else {
                         dnTable.ajax.reload();
                     }
+                });
+
+                // Handle print label click (DN table only)
+                $(document).on('click', '.print-label-btn', function() {
+                    const dnNo = $(this).data('dn');
+                    const button = $(this);
+                    console.log(dnNo)
+                    button.prop('disabled', true).addClass('opacity-60');
+
+                    $.ajax({
+                        url: "{{ route('transaction.printDn') }}",
+                        method: 'POST',
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            dn_no: dnNo,
+                        },
+                        success: function() {
+                            if (typeof toastr !== 'undefined') {
+                                toastr.success('Print job sent');
+                            } else {
+                                alert('Print job sent');
+                            }
+                        },
+                        error: function(xhr) {
+                            const msg = xhr.responseJSON?.message || 'Print failed';
+                            if (typeof toastr !== 'undefined') {
+                                toastr.error(msg);
+                            } else {
+                                alert(msg);
+                            }
+                        },
+                        complete: function() {
+                            button.prop('disabled', false).removeClass('opacity-60');
+                        }
+                    });
                 });
 
                 // Customize the length select and search inputs

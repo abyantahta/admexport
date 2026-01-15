@@ -18,4 +18,9 @@ class Dn extends Model
     {
         return $this->hasMany(Transaction::class, 'dn_no');
     }
+    public function dnHistory()
+    {
+        // Link by dn_no (not the default id) so history loads correctly
+        return $this->hasOne(DNHistory::class, 'dn_no', 'dn_no');
+    }
 }

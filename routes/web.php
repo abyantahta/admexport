@@ -6,6 +6,15 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CasemarkController;
 use App\Http\Controllers\MatchingController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+
+// Authentication Routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register']);
 
 // Route::get('/', function () {
 //     return view('pages.dn');
@@ -28,5 +37,11 @@ Route::post('/matching/store', [MatchingController::class, 'store'])->name('matc
 Route::post('/matching/unlock', [MatchingController::class, 'unlock'])->name('matching.unlock');
 Route::post('/matching/reset', [MatchingController::class, 'resetSession'])->name('matching.reset');
 Route::post('/matching/resetWithPassword', [MatchingController::class, 'resetSessionWithPassword'])->name('matching.resetWithPassword');
-Route::post('/transactions/print', [TransactionController::class, 'printDN'])->name('transaction.printDn');
+Route::get('/transactions/print', [TransactionController::class, 'printDN'])->name('transaction.printDn');
 Route::get('export/transactions', [DnController::class, 'exportTransactions'])->name('export.transactions');
+
+// Protected verify routes - only authenticated users can verify
+Route::middleware('auth')->group(function () {
+    Route::post('/dn/verify', [DnController::class, 'verify'])->name('dn.verify');
+    Route::get('/dn/verify/{dn_no}', [DnController::class, 'getVerify'])->name('dn.getVerify');
+});

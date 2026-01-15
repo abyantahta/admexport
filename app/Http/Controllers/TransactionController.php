@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Casemark;
 use App\Models\Interlock;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
@@ -85,29 +86,25 @@ class TransactionController extends Controller
             if (empty($dn_no)) {
                 return response()->json(['message' => 'DN number missing'], 422);
             }
-
-            // Generate PDF with Spatie Laravel PDF
-            $filename = 'DN_' . $dn_no . '_' . now()->format('Y-m-d_H-i-s') . '.pdf';
-            \Illuminate\Support\Facades\Storage::disk('public')->makeDirectory('DN');
-
-            $pdfPath = storage_path("app/public/DN/{$filename}");
-
-            // Render simple DN PDF
-            Browsershot::html(view('pages.print-dn-pdf', compact('dn_no'))->render())
+            $casemarks = Casemark::where('dn_no', $dn_no)->get();
+            // Generate PDF directly in memory (no storage)
+            $pdf = Browsershot::html(view('pages.print-dn-pdf', compact('dn_no','casemarks'))->render())
                 ->timeout(60000)
-                ->paperSize(130, 85, 'mm') // 144x89mm in millimeters
+                ->format('A5')
+                ->landscape() 
                 ->margins(0, 0, 0, 0) // No margins
                 ->dismissDialogs() // Dismiss any browser dialogs
                 ->waitUntilNetworkIdle() // Wait for network to be idle
                 ->emulateMedia('print') // Emulate print media
                 ->showBackground() // Show background colors and images
-                ->savePdf($pdfPath);
+                ->pdf(); // returns raw PDF string
 
-            $exists = file_exists($pdfPath);
+            $filename = 'DN_' . $dn_no . '_' . now()->format('Y-m-d_H-i-s') . '.pdf';
 
-            return response()->json([
-                'status' => $exists ? 'saved' : 'not_saved',
-                'path' => $pdfPath,
+            // Stream PDF inline to browser (opens in new tab)
+            return response($pdf, 200, [
+                'Content-Type'        => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.$filename.'"',
             ]);
 
 

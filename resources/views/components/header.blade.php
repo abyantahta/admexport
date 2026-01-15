@@ -10,12 +10,18 @@
             <!-- Desktop Navigation -->
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-4">
-                    {{-- <a href="{{ route('matching') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Matching</a>
-                    <a href="{{ route('upload-dn') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Upload DN</a>
-                    <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a> --}}
                     <a href="{{ route('matching') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Matching</a>
                     <a href="{{ route('dn.upload') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Upload DN</a>
-                    {{-- <a href="" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a> --}}
+                    @auth
+                        {{-- <span class="text-gray-600 px-3 py-2 text-sm font-medium">{{ auth()->user()->name }}</span> --}}
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="bg-blue-500 text-gray-600 hover:bg-blue-400 px-5 text-white py-2 rounded-md text-sm font-medium">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="bg-blue-500 text-gray-600 hover:bg-blue-400 px-5 text-white py-2 rounded-md text-sm font-medium">Login</a>
+                        {{-- <a href="{{ route('register') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Register</a> --}}
+                    @endauth
                 </div>
             </div>
 
@@ -38,9 +44,18 @@
         <!-- Mobile menu -->
         <div class="hidden md:hidden" id="mobile-menu">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Matching</a>
-                <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Upload DN</a>
-                {{-- <a href="" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Dashboard</a> --}}
+                <a href="{{ route('matching') }}" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Matching</a>
+                <a href="{{ route('dn.upload') }}" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Upload DN</a>
+                @auth
+                    {{-- <span class="text-gray-600 block px-3 py-2 text-xs font-medium">{{ auth()->user()->name }}</span> --}}
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="bg-blue-400 text-white hover:text-gray-900 inline-block px-3 py-2 rounded-md text-xs font-medium w-full text-left">Logout</button>
+                    </form>
+                @else
+                    <a href="{{ route('login') }}" class="bg-blue-400 text-white hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Login</a>
+                    {{-- <a href="{{ route('register') }}" class="text-gray-600 hover:text-gray-900 block px-3 py-2 rounded-md text-xs font-medium">Register</a> --}}
+                @endauth
             </div>
         </div>
     </nav>

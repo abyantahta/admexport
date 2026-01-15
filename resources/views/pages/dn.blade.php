@@ -147,7 +147,8 @@
                             <thead class=" text-xs text-black uppercase bg-blue-600  dark:text-gray-400">
                                 <tr class="">
                                     <th scope="col" class="px-6 py-4 text-white">No</th>
-                                    <th scope="col" class="px-6 py-4 text-white">Print</th>
+                                    <th scope="col" class="px-6 py-4 text-white">PDF</th>
+                                    <th scope="col" class="px-6 py-4 text-white">Verified</th>
                                     <th scope="col" class="px-6 py-4 text-white">Status</th>
                                     <th scope="col" class="px-6 py-4 text-white">Dn Number</th>
                                     <th scope="col" class="px-6 py-4 text-white">Count Casemark</th>
@@ -191,12 +192,75 @@
             </div>
         </div>
 
+        <!-- Verification Modal -->
+        <div id="verifyModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
+            <div class="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+                <h3 class="text-xl font-bold mb-4">Verify DN</h3>
+                <form id="verifyForm">
+                    @csrf
+                    <input type="hidden" id="verifyDnNo" name="dn_no">
+                    
+                    <div class="mb-4">
+                        <label for="pic" class="block text-sm font-medium text-gray-700 mb-2">PIC</label>
+                        <select id="pic" name="pic" required
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Select PIC</option>
+                            <option value="PIC 1">PIC 1</option>
+                            <option value="PIC 2">PIC 2</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="remarks" class="block text-sm font-medium text-gray-700 mb-2">Remarks</label>
+                        <textarea id="remarks" name="remarks" rows="3"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" id="isVerified" name="is_verified" value="1"
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500">
+                            <span class="ml-2 text-sm font-medium text-gray-700">Is Verified</span>
+                        </label>
+                    </div>
+                    
+                    <div class="flex gap-3 justify-end">
+                        <button type="button" id="closeModal" 
+                            class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" 
+                            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Add jQuery and DataTables JS -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
         <!-- Add Flatpickr CSS and JS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        
+        <style>
+            /* Ensure PDF button hover works properly */
+            .print-label-btn:not(:disabled):hover {
+                background-color: #059669 !important; /* green-700 */
+            }
+            .print-label-btn:not(:disabled):active {
+                background-color: #047857 !important; /* green-800 */
+            }
+            .print-label-btn:not(:disabled) {
+                cursor: pointer !important;
+            }
+            .print-label-btn:disabled {
+                cursor: not-allowed !important;
+                opacity: 0.6 !important;
+            }
+        </style>
 
         <script>
             $(document).ready(function() {
@@ -299,20 +363,72 @@
                             orderable: false,
                             searchable: false,
                             render: function(data, type, row) {
-                                console.log(row);
-                                const matched = row.count_casemark==row.qty_casemark;
-                                const btnClass = matched ? 'bg-green-600 hover:bg-green-700 cursor-pointer' : 'bg-gray-300';
-                                const title = matched ? 'Matched - print label' : 'Unmatched - print label';
-                                const disabled = matched? "" : "disabled"
-                                // console.log(disabled);
-                                return `<button type="button"
+                                const matched = row.count_casemark == row.qty_casemark;
+                                // Convert is_verified to boolean - handle all possible formats
+                                const isVerifiedValue = row.is_verified;
+                                const isVerified = isVerifiedValue === true || isVerifiedValue === 1 || isVerifiedValue === '1' || isVerifiedValue === 'true' || isVerifiedValue === 'on';
+                                const canPrint = matched && isVerified;
+                                
+                                // Use different classes for enabled vs disabled states
+                                let btnClass, title;
+                                if (canPrint) {
+                                    btnClass = 'bg-green-600 hover:bg-green-700 active:bg-green-800 cursor-pointer transition-colors duration-200';
+                                    title = 'Matched & Verified - print label';
+                                } else {
+                                    btnClass = 'bg-gray-300 cursor-not-allowed opacity-60';
+                                    title = matched ? 'Not verified yet' : 'Unmatched - print label';
+                                }
+                                
+                                // Build button HTML
+                                let buttonHtml = `<button type="button"
                                             class="print-label-btn ${btnClass} text-white px-3 py-1 rounded flex items-center gap-2 mx-auto"
                                             data-dn="${row.dn_no}"
                                             data-matched="${matched}"
-                                            title="${title}"
-                                            ${disabled}
+                                            data-verified="${isVerified}"
+                                            data-can-print="${canPrint}"
+                                            title="${title}"`;
+                                
+                                if (!canPrint) {
+                                    buttonHtml += ' disabled';
+                                }
+                                
+                                buttonHtml += `>PDF</button>`;
+                                return buttonHtml;
+                            }
+                        },
+                        {
+                            data: null,
+                            name: 'verified',
+                            width: '7%',
+                            className: 'px-6 py-3 text-center',
+                            orderable: false,
+                            searchable: false,
+                            render: function(data, type, row) {
+                                // Convert is_verified to boolean - handle all possible formats
+                                const isVerifiedValue = row.is_verified;
+                                const isMatch = row.count_casemark==row.qty_casemark
+                                const isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
+                                
+                                // console.log(row)
+
+                                const isVerified = isVerifiedValue === true || isVerifiedValue === 1 || isVerifiedValue === '1' || isVerifiedValue === 'true' || isVerifiedValue === 'on';
+                                const btnClass = isVerified ? 'bg-green-600 hover:bg-green-700' : 'bg-yellow-500 hover:bg-yellow-600';
+                                const btnText = isVerified ? 'Verified' : 'Verify';
+                                
+                                // Disable button if not authenticated or not matched
+                                const canVerify = isAuthenticated && isMatch;
+                                const finalBtnClass = canVerify ? btnClass : 'bg-gray-300 cursor-not-allowed';
+                                const disabledAttr = canVerify ? '' : ' disabled';
+                                
+                                // console.log(row,'dsiandasjdnsa')
+                                return `<button type="button"
+                                            class="verify-btn ${finalBtnClass} text-white px-3 py-1 rounded flex items-center gap-2 mx-auto"
+                                            data-dn="${row.dn_no}"
+                                            data-verified="${isVerified}"
+                                            data-authenticated="${isAuthenticated}"
+                                            ${disabledAttr}
                                             >
-                                            Print
+                                            ${btnText}
                                         </button>`;
                             }
                         },
@@ -536,39 +652,121 @@
                     }
                 });
 
-                // Handle print label click (DN table only)
-                $(document).on('click', '.print-label-btn', function() {
+                // Handle verify button click
+                $(document).on('click', '.verify-btn', function() {
+                    const isAuthenticated = $(this).data('authenticated');
+                    
+                    // Check if user is authenticated
+                    if (!isAuthenticated) {
+                        alert('You must be logged in to verify. Please login first.');
+                        window.location.href = '{{ route("login") }}';
+                        return;
+                    }
+                    
+                    // Check if button is disabled
+                    if ($(this).prop('disabled')) {
+                        return;
+                    }
+                    
                     const dnNo = $(this).data('dn');
-                    const button = $(this);
-                    console.log(dnNo)
-                    button.prop('disabled', true).addClass('opacity-60');
-
+                    $('#verifyDnNo').val(dnNo);
+                    
+                    // Load existing verification data
                     $.ajax({
-                        url: "{{ route('transaction.printDn') }}",
-                        method: 'POST',
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            dn_no: dnNo,
-                        },
-                        success: function() {
-                            if (typeof toastr !== 'undefined') {
-                                toastr.success('Print job sent');
-                            } else {
-                                alert('Print job sent');
-                            }
+                        url: `{{ route('dn.getVerify', ':dn_no') }}`.replace(':dn_no', dnNo),
+                        method: 'GET',
+                        success: function(data) {
+                            $('#pic').val(data.pic || '');
+                            $('#remarks').val(data.remarks || '');
+                            $('#isVerified').prop('checked', data.is_verified || false);
                         },
                         error: function(xhr) {
-                            const msg = xhr.responseJSON?.message || 'Print failed';
+                            if (xhr.status === 401) {
+                                alert('You must be logged in to view verification. Please login first.');
+                                window.location.href = '{{ route("login") }}';
+                            } else {
+                                $('#pic').val('');
+                                $('#remarks').val('');
+                                $('#isVerified').prop('checked', false);
+                            }
+                        }
+                    });
+                    
+                    $('#verifyModal').removeClass('hidden').css('display', 'flex');
+                });
+
+                // Close modal
+                $('#closeModal').on('click', function() {
+                    $('#verifyModal').addClass('hidden').css('display', 'none');
+                });
+                
+                $('#verifyModal').on('click', function(e) {
+                    if (e.target === this) {
+                        $('#verifyModal').addClass('hidden').css('display', 'none');
+                    }
+                });
+
+                // Handle verify form submission
+                $('#verifyForm').on('submit', function(e) {
+                    e.preventDefault();
+                    const formData = {
+                        _token: "{{ csrf_token() }}",
+                        dn_no: $('#verifyDnNo').val(),
+                        pic: $('#pic').val(),
+                        remarks: $('#remarks').val(),
+                        is_verified: $('#isVerified').is(':checked') ? 1 : 0
+                    };
+
+                    $.ajax({
+                        url: "{{ route('dn.verify') }}",
+                        method: 'POST',
+                        data: formData,
+                        success: function(response) {
+                            $('#verifyModal').addClass('hidden').css('display', 'none');
+                            if (typeof toastr !== 'undefined') {
+                                toastr.success('Verification saved successfully');
+                            } else {
+                                alert('Verification saved successfully');
+                            }
+                            // Small delay to ensure database is updated, then reload the table
+                            setTimeout(function() {
+                                dnTable.ajax.reload(null, false); // false = don't reset pagination
+                            }, 100);
+                        },
+                        error: function(xhr) {
+                            let msg = xhr.responseJSON?.message || 'Failed to save verification';
+                            if (xhr.status === 401) {
+                                msg = 'You must be logged in to verify. Please login first.';
+                                setTimeout(function() {
+                                    window.location.href = '{{ route("login") }}';
+                                }, 1500);
+                            }
                             if (typeof toastr !== 'undefined') {
                                 toastr.error(msg);
                             } else {
                                 alert(msg);
                             }
-                        },
-                        complete: function() {
-                            button.prop('disabled', false).removeClass('opacity-60');
                         }
                     });
+                });
+
+                // Handle print label click (DN table only)
+                $(document).on('click', '.print-label-btn', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Check if button is disabled or cannot print
+                    const canPrint = $(this).data('can-print');
+                    const isDisabled = $(this).prop('disabled');
+                    
+                    if (isDisabled || !canPrint) {
+                        return false;
+                    }
+
+                    const dnNo = $(this).data('dn');
+                    // Open PDF in a new tab via GET
+                    const url = "{{ route('transaction.printDn') }}" + "?dn_no=" + encodeURIComponent(dnNo);
+                    window.open(url, '_blank');
                 });
 
                 // Customize the length select and search inputs

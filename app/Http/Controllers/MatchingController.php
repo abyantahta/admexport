@@ -125,7 +125,7 @@ class MatchingController extends Controller
                     if ($isTransactionDouble) {
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban sudah pernah discan sebelumnya!');
                     }
-                    $cycleDuration = 180;
+                    $cycleDuration = 150;
                     $transaction = Transaction::query()->latest()->first();
                     if($transaction->created_at->diffInSeconds(Carbon::now()) < $cycleDuration){
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>WAIT</b></span>, Silahkan scan lagi setelah ' . floor($cycleDuration - $transaction->created_at->diffInSeconds(Carbon::now())) . ' detik! (Cycle Duration: ' . $cycleDuration . ' seconds)');
@@ -197,6 +197,17 @@ class MatchingController extends Controller
                                 $dn->update([
                                     'isMatch' => true
                                 ]);
+                                //KIRIM WA
+                                try {
+                                    $response = Http::withHeaders([
+                                        'Authorization' => 'DcjkiWJ9gwbp7scYKowe',
+                                    ])->withOptions(['verify' => false])->post('https://api.fonnte.com/send', [
+                                        'target' => '089522134460, 081270074197,082245792234',
+                                        'message' => $dn->dn_no.' telah match pada pukul ' . Carbon::now()->format('H:i'),
+                                        'delay' => '2'
+                                    ]);
+                                } catch (\Exception $e) {
+                                }
                                 $activeDn->delete();
                                 return redirect()->back()->with('message-match', 'Kanban ' . $activeDn->casemark_no . $tempData['kanban_seq'] . " berhasil match. DN " . $dn->dn_no . " sudah closed, siap dikirim!");
                             }

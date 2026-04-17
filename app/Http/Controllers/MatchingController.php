@@ -144,14 +144,24 @@ class MatchingController extends Controller
                 } else if (strlen($input) == 63) {
                     return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span> ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai dengan casemark');
                     //SCAN LABEL OK 
-                } else if (strlen($input) == 28 && (preg_match('/^\d{5}-[A-Z]{2}\d{3}-\d{2}-[A-Z]{2}\d{3}#[A-Z0-9]{7}$/', $input))) {
+                } else {
+                    $labelParts = explode('#', $input);
+                    if (count($labelParts) !== 4) {
+                        // $tempData = Session::get('temp_data');
+                        // if ($tempData) {
+                        //     return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Label tidak sesuai format, SCAN ULANG !');
+                        // }
+                        return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>FORMAT TIDAK SESUAI</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai format, SCAN ULANG !');
+                    }
+
                     $tempData = Session::get('temp_data');
                     if (!$tempData) {
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak ditemukan dalam database');
                     }
-                    $label_part_no = substr($input, 0, 17);
-                    $label_seq = substr($input, 17, 3);
-                    $lot_no = substr($input, 21, 7);
+
+                    $label_part_no = trim($labelParts[0]);
+                    $label_seq = trim($labelParts[2]);
+                    $lot_no = trim($labelParts[3]);
                     session()->put('part_no_label', $label_part_no);
                     session()->put('seq_label', $label_seq);
                     // dd($label_part_no,$label_seq,$lot_no);
@@ -206,6 +216,11 @@ class MatchingController extends Controller
                                         'message' => $dn->dn_no.' telah match pada pukul ' . Carbon::now()->format('H:i'),
                                         'delay' => '2'
                                     ]);
+                                    if ($response->successful()) {
+                                        dd("success");
+                                    } else {
+                                        dd("error");
+                                    }
                                 } catch (\Exception $e) {
                                 }
                                 $activeDn->delete();
@@ -240,7 +255,8 @@ class MatchingController extends Controller
                             $response = Http::withHeaders([
                                 'Authorization' => 'DcjkiWJ9gwbp7scYKowe',
                             ])->withOptions(['verify' => false])->post('https://api.fonnte.com/send', [
-                                'target' => '089522134460, 081270074197,082245792234',
+                                'target' => '082245792234',
+                                // 'target' => '089522134460, 081270074197,082245792234',
                                 'message' => 'Terjadi mismatch pengiriman ADM Export pukul ' . Carbon::now()->format('H:i') . '
                                                 Segera datang ke line.',
                                 'delay' => '2'
@@ -252,13 +268,6 @@ class MatchingController extends Controller
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>MISMATCH</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai!');
                     }
 
-                    //TIDAK SESUAI FORMAT
-                } else {
-                    $tempData = Session::get('temp_date');
-                    if ($tempData) {
-                        return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Label tidak sesuai format, SCAN ULANG !');
-                    }
-                    return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>FORMAT TIDAK SESUAI</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban tidak sesuai format, SCAN ULANG !');
                 }
             }
             // if($is)

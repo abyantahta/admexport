@@ -191,7 +191,12 @@ class MatchingController extends Controller
                             'casemark_no' => $activeDn['casemark_no'],
                             'dn_no' => $activeDn['dn_no']
                         ]);
-                        session()->flush();
+                        // Keep DN session active; only clear per-scan temporary values.
+                        session()->forget('temp_data');
+                        session()->forget('part_no_kanban');
+                        session()->forget('seq_kanban');
+                        session()->forget('part_no_label');
+                        session()->forget('seq_label');
 
                         if ($casemark->count_kanban == $casemark->qty_kanban) {
                             $casemark->update([
@@ -207,6 +212,8 @@ class MatchingController extends Controller
                                 $dn->update([
                                     'isMatch' => true
                                 ]);
+                                // Flush all session data only when DN is fully closed.
+                                session()->flush();
                                 //KIRIM WA
                                 try {
                                     $response = Http::withHeaders([

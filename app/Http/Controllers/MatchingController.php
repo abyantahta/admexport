@@ -191,12 +191,7 @@ class MatchingController extends Controller
                             'casemark_no' => $activeDn['casemark_no'],
                             'dn_no' => $activeDn['dn_no']
                         ]);
-                        // Keep DN session active; only clear per-scan temporary values.
-                        session()->forget('temp_data');
-                        session()->forget('part_no_kanban');
-                        session()->forget('seq_kanban');
-                        session()->forget('part_no_label');
-                        session()->forget('seq_label');
+                        session()->flush();
 
                         if ($casemark->count_kanban == $casemark->qty_kanban) {
                             $casemark->update([
@@ -208,36 +203,34 @@ class MatchingController extends Controller
                             $dn->update([
                                 'count_casemark' => $dn->count_casemark + 1
                             ]);
+                            $dn->refresh();
+
                             if ($dn->qty_casemark == $dn->count_casemark) {
                                 $dn->update([
                                     'isMatch' => true
                                 ]);
-                                // Flush all session data only when DN is fully closed.
-                                session()->flush();
-                                //KIRIM WA
+
                                 try {
-                                    $response = Http::withHeaders([
+                                    Http::withHeaders([
                                         'Authorization' => 'DcjkiWJ9gwbp7scYKowe',
                                     ])->withOptions(['verify' => false])->post('https://api.fonnte.com/send', [
                                         'target' => '089522134460, 081270074197,082245792234',
-                                        'message' => $dn->dn_no.' telah match pada pukul ' . Carbon::now()->format('H:i'),
+                                        'message' => $dn->dn_no . ' telah match pada pukul ' . Carbon::now()->format('H:i'),
                                         'delay' => '2'
                                     ]);
-                                    if ($response->successful()) {
-                                        dd("success");
-                                    } else {
-                                        dd("error");
-                                    }
                                 } catch (\Exception $e) {
                                 }
+
+                                session()->flush();
                                 $activeDn->delete();
-                                return redirect()->back()->with('message-match', 'Kanban ' . $activeDn->casemark_no . $tempData['kanban_seq'] . " berhasil match. DN " . $dn->dn_no . " sudah closed, siap dikirim!");
+
+                                return redirect()->back()->with('message-match', 'Kanban ' . $casemark->casemark_no . $tempData['kanban_seq'] . ' berhasil match. DN ' . $dn->dn_no . ' sudah closed, silahkan scan DN baru!');
                             }
-                            return redirect()->back()->with('message-match', 'Kanban ' . $activeDn->casemark_no . $tempData['kanban_seq'] . " berhasil match. Casemark " . $casemark->casemark_no . "  sudah close, Silahkan SCAN Casemark yang lain");
+
+                            return redirect()->back()->with('message-match', 'Kanban ' . $casemark->casemark_no . $tempData['kanban_seq'] . ' berhasil match. Casemark ' . $casemark->casemark_no . ' sudah close, silahkan SCAN Casemark yang lain');
                         }
 
-
-                        return redirect()->back()->with('message-match', 'Kanban ' . $activeDn->casemark_no . $tempData['kanban_seq'] . " berhasil match");
+                        return redirect()->back()->with('message-match', 'Kanban ' . $casemark->casemark_no . $tempData['kanban_seq'] . ' berhasil match');
                     } else {
                         Transaction::create([
                             'kanban_barcode' => $tempData['casemark_no'] . $tempData['kanban_seq'],

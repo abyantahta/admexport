@@ -40,7 +40,10 @@ class MatchingController extends Controller
             $activeDn['count_casemark'] = $dn->count_casemark;
 
             if ($tempActiveDn->casemark_no) {
-                $casemark = Casemark::query()->where('casemark_no', $tempActiveDn->casemark_no)->first();
+                $casemark = Casemark::query()
+                    ->where('casemark_no', $tempActiveDn->casemark_no)
+                    ->where('dn_no', $tempActiveDn->dn_no)
+                    ->first();
                 $activeCasemark['casemark_no'] = $casemark->casemark_no;
                 $activeCasemark['qty_kanban'] = $casemark->qty_kanban;
                 $activeCasemark['count_kanban'] = $casemark->count_kanban;
@@ -83,18 +86,12 @@ class MatchingController extends Controller
             if (!$is_casemark_active) {
                 if (strlen($input) == 28 && (preg_match('/^[A-Z]\d{2}-SDI-\d{5}-\d{2}##\d{8}#\d$/', $input) || preg_match('/^[A-Z]{2}\d{1}-SDI-\d{5}-\d{2}##\d{8}#\d$/', $input))) {
                     $casemark_from_input = substr($input, 0, 13);
-                    // dd($casemark_from_input);
-                    $thisCasemark = Casemark::where('casemark_no', $casemark_from_input)->first();
-                    //CEK APAKAH CASEMARK SESUAI FORMAT PENULISAN DAN SUDAH TERDAFTAR DI DATABASE
+                    // Cari casemark unik dalam DN yang sedang aktif
+                    $thisCasemark = Casemark::where('casemark_no', $casemark_from_input)
+                        ->where('dn_no', $activeDn->dn_no)
+                        ->first();
+                    //CEK APAKAH CASEMARK SESUAI FORMAT PENULISAN DAN SUDAH TERDAFTAR DI DN AKTIF
                     if ($thisCasemark) {
-                        // dd($thisCasemark,$activeDn);
-                        $isThisCasemarkValid = ($thisCasemark->dn_no) == ($activeDn->dn_no);
-                        //CEK APAKAH FORMAT CASEMARK YANG DISCAN TERDAFTAR PADA DN YANG DISCAN SEBELUMNYA
-                        if (!$isThisCasemarkValid) {
-                            //CASEMARK TIDAK SESUAI DENGAN DN YANG DISCAN
-                            return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak sesuai dengan DN, scan Casemark yang sesuai');
-                        }
-
                         if ($thisCasemark->isMatched) {
                             return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark Close, sudah dimatch sebelumnya');
                         }
@@ -104,6 +101,12 @@ class MatchingController extends Controller
                         ]);
                         //BERHASIL
                         return redirect()->back()->with('message-match', 'SILAHKAN SCAN BARCODE KANBAN');
+                    }
+
+                    // Casemark ada di DN lain / tidak terdaftar
+                    $existsInOtherDn = Casemark::where('casemark_no', $casemark_from_input)->exists();
+                    if ($existsInOtherDn) {
+                        return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak sesuai dengan DN, scan Casemark yang sesuai');
                     }
                     return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>SCAN ULANG</b></span>, ' . $input . '(L:' . strlen($input) . ') Casemark tidak ditemukan dalam database');
                 }
@@ -121,7 +124,10 @@ class MatchingController extends Controller
                     $kanban_part_no = $input_parts[1];
                     $kanban_seq = substr($input_parts[3], 0, 3);
 
-                    $isTransactionDouble = Transaction::query()->where('kanban_barcode', $input_parts[0] . $kanban_seq)->exists();
+                    $isTransactionDouble = Transaction::query()
+                        ->where('kanban_barcode', $input_parts[0] . $kanban_seq)
+                        ->where('dn_no', $activeDn->dn_no)
+                        ->exists();
                     if ($isTransactionDouble) {
                         return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Kanban sudah pernah discan sebelumnya!');
                     }
@@ -172,7 +178,10 @@ class MatchingController extends Controller
                             return redirect()->back()->withErrors('<span class="badge bg-warning" ><b>DOUBLE</b></span>, ' . $input . '(L:' . strlen($input) . ') Label dengan Sequence : '.$label_seq." dan Lot : ".$lot_no." sudah pernah discan!");
                         }
 
-                        $casemark = Casemark::query()->where('casemark_no', $activeDn->casemark_no)->first();
+                        $casemark = Casemark::query()
+                            ->where('casemark_no', $activeDn->casemark_no)
+                            ->where('dn_no', $activeDn->dn_no)
+                            ->first();
                         $dn = Dn::query()->where('dn_no', $activeDn->dn_no)->first();
 
                         $casemark->update([

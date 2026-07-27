@@ -17,6 +17,7 @@ class Casemark extends Model
     }
     public function transactions()
     {
-        return $this->hasMany(Transaction::class, 'casemark_no');
+        return $this->hasMany(Transaction::class, 'casemark_no', 'casemark_no')
+            ->where('transactions.dn_no', $this->dn_no);
     }
 }

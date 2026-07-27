@@ -12,7 +12,8 @@ class Transaction extends Model
     protected $fillable = ['part_no_kanban', 'part_no_label','kanban_barcode','label_barcode', 'seq_no_kanban', 'seq_no_label', 'status', 'casemark_no','dn_no','lot_no'];
     public function casemark()
     {
-        return $this->belongsTo(Casemark::class, 'casemark_no');
+        return $this->belongsTo(Casemark::class, 'casemark_no', 'casemark_no')
+            ->where('casemarks.dn_no', $this->dn_no);
     }
     public function dn()
     {
